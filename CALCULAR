@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Média</title>
+</head>
+<body>
+    <h2>Insira os tempos de atendimento (em minutos)</h2>
+    <textarea id="inputTempos" rows="5" cols="50" placeholder="Cole os tempos de atendimento separados por espaço, vírgula ou enter..."></textarea>
+    <p><strong>TME Calculado:</strong> <span id="tmeFinal">0</span></p>
+
+    <script>
+        document.getElementById("inputTempos").addEventListener("input", calcularTME);
+
+        function calcularTME() {
+            let input = document.getElementById("inputTempos").value;
+            
+            // Filtra os números (tempos em minutos)
+            let tempos = input.match(/-?\d+(\.\d+)?/g); 
+
+            if (tempos) {
+                let temposNumericos = tempos.map(Number); // Converte os tempos para números
+                
+                // Soma os tempos e divide pelo número de atendimentos
+                let somaTempos = temposNumericos.reduce((a, b) => a + b, 0);
+                let numeroDeAtendimentos = temposNumericos.length;
+                
+                // Calculando o TME
+                let tme = somaTempos / numeroDeAtendimentos;
+                
+                // Convertendo o TME para minutos e segundos
+                let minutos = Math.floor(tme);
+                let segundos = Math.round((tme - minutos) * 60);
+                
+                // Exibe o TME em minutos e segundos
+                document.getElementById("tmeFinal").innerText = `${minutos} minutos e ${segundos} segundos`;
+            } else {
+                document.getElementById("tmeFinal").innerText = "0";
+            }
+        }
+    </script>
+
+
+    <h2>Insira os horários para calcular a métrica</h2>
+    <textarea id="inputHoras" rows="5" cols="50" placeholder="Cole os horários no formato HH:MM"></textarea>
+    <p><strong>Quantidade de horários acima de 08:00:</strong> <span id="countHoras">0</span></p>
+    <script>
+        document.getElementById("inputValores").addEventListener("input", calcularMedia);
+        document.getElementById("inputHoras").addEventListener("input", contarHoras);
+
+        function calcularMedia() {
+            let input = document.getElementById("inputValores").value;
+            let valores = input.match(/-?\d+(\.\d+)?/g); 
+
+            if (valores) {
+                let numeros = valores.map(Number);
+                let media = numeros.reduce((a, b) => a + b, 0) / numeros.length;
+                document.getElementById("mediaFinal").innerText = media.toFixed(2);
+            } else {
+                document.getElementById("mediaFinal").innerText = "0";
+            }
+        }
+
+        function contarHoras() {
+            let input = document.getElementById("inputHoras").value;
+            let horas = input.match(/\b\d{1,2}:\d{2}\b/g); 
+
+            if (horas) {
+                let count = horas.filter(hora => {
+                    let [h, m] = hora.split(":").map(Number);
+                    return h > 8 || (h === 8 && m > 0); // Conta se for maior que 08:00
+                }).length;
+
+                document.getElementById("countHoras").innerText = count;
+            } else {
+                document.getElementById("countHoras").innerText = "0";
+            }
+        }
+    </script>
+    	<h2>Insira os valores</h2>
+    <textarea id="inputValores" rows="10" cols="50" placeholder="Cole aqui os valores separados por espaço, vírgula ou enter..."></textarea>
+    <br>
+    <p><strong>Média Calculada:</strong> <span id="mediaFinal">0</span></p>
+
+    <script>
+        document.getElementById("inputValores").addEventListener("input", calcularMedia);
+
+        function calcularMedia() {
+            let input = document.getElementById("inputValores").value;
+            
+            // Filtra apenas números separados por espaços, vírgulas ou quebras de linha
+            let valores = input.match(/-?\d+(\.\d+)?/g); 
+
+            if (valores) {
+                let numeros = valores.map(Number); // Converte para números
+                let media = numeros.reduce((a, b) => a + b, 0) / numeros.length;
+                document.getElementById("mediaFinal").innerText = media.toFixed(2);
+            } else {
+                document.getElementById("mediaFinal").innerText = "0";
+            }
+        }
+    </script>
+
+
+</body>
+</html>
+
+
