@@ -3,55 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cálculo de Média</title>
+    <title>Cálculo de Intervalo e Métrica</title>
+    <style type="text/css">
+body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Container para os dois blocos laterais */
+        .container {
+            display: flex;
+            justify-content: space-between; /* Mantém os blocos alinhados */
+            align-items: flex-start;
+            width: 100%;
+            gap: 20px;
+        }
+
+        /* Estilo dos blocos laterais */
+        .conteudo-esquerda, .conteudo-direita {
+            width: 48%; /* Deixa os blocos com tamanhos semelhantes */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Garante que o bloco de valores fique abaixo dos demais */
+        .conteudo-abaixo {
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #e9ecef;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ajuste dos inputs */
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+    </style>
+
 </head>
 <body>
-    <h2>Insira os tempos de atendimento (em minutos)</h2>
-    <textarea id="inputTempos" rows="5" cols="50" placeholder="Cole os tempos de atendimento separados por espaço, vírgula ou enter..."></textarea>
-    <p><strong>TME Calculado:</strong> <span id="tmeFinal">0</span></p>
+    <!-- Bloco de tempos de atendimento -->
+    <div class="conteudo-abaixo">
+        <h2>Insira os tempos de atendimento (em minutos)</h2>
+        <textarea id="inputTempos" rows="5" placeholder="Cole os tempos de atendimento separados por espaço, vírgula ou enter..."></textarea>
+        <p><strong>TME Calculado:</strong> <span id="tmeFinal">0</span></p>
+    </div>
+
+    <!-- Container principal para os dois blocos lado a lado -->
+    <div class="container">
+        <!-- Lado esquerdo -->
+        <div class="conteudo-esquerda">
+            <h2>Insira os horários para calcular a métrica</h2>
+            <textarea id="inputHoras1" rows="5" placeholder="Cole os horários no formato HH:MM"></textarea>
+            <p><strong>Quantidade de horários acima de 08:00:</strong> <span id="countHoras1">0</span></p>
+        </div>
+
+        <!-- Lado direito -->
+        <div class="conteudo-direita">
+            <h2>Insira os horários para calcular a métrica (Saída e Retorno)</h2>
+            <textarea id="inputHoras2" rows="5" placeholder="Cole os horários no formato HH:MM (Saída e Retorno separados por espaço)"></textarea>
+            <p><strong>Quantidade de intervalos contabilizados:</strong> <span id="countHoras2">0</span></p>
+        </div>
+    </div>
+
+    <!-- Bloco abaixo dos cálculos -->
+    <div class="conteudo-abaixo">
+        <h2>Insira os valores</h2>
+        <textarea id="inputValores" rows="5" placeholder="Cole aqui os valores separados por espaço, vírgula ou enter..."></textarea>
+        <p><strong>Média Calculada:</strong> <span id="mediaFinal">0</span></p>
+    </div>
 
     <script>
+                // Cálculo do TME (Tempo Médio de Atendimento)
         document.getElementById("inputTempos").addEventListener("input", calcularTME);
 
         function calcularTME() {
             let input = document.getElementById("inputTempos").value;
-            
-            // Filtra os números (tempos em minutos)
             let tempos = input.match(/-?\d+(\.\d+)?/g); 
 
             if (tempos) {
-                let temposNumericos = tempos.map(Number); // Converte os tempos para números
-                
-                // Soma os tempos e divide pelo número de atendimentos
+                let temposNumericos = tempos.map(Number);
                 let somaTempos = temposNumericos.reduce((a, b) => a + b, 0);
                 let numeroDeAtendimentos = temposNumericos.length;
-                
-                // Calculando o TME
+
                 let tme = somaTempos / numeroDeAtendimentos;
-                
-                // Convertendo o TME para minutos e segundos
                 let minutos = Math.floor(tme);
                 let segundos = Math.round((tme - minutos) * 60);
                 
-                // Exibe o TME em minutos e segundos
                 document.getElementById("tmeFinal").innerText = `${minutos} minutos e ${segundos} segundos`;
             } else {
                 document.getElementById("tmeFinal").innerText = "0";
             }
         }
-    </script>
 
+        // Cálculo da quantidade de horários acima de 08:00
+        document.getElementById("inputHoras1").addEventListener("input", contarHoras);
 
-    <h2>Insira os horários para calcular a métrica</h2>
-    <textarea id="inputHoras" rows="5" cols="50" placeholder="Cole os horários no formato HH:MM"></textarea>
-    <p><strong>Quantidade de horários acima de 08:00:</strong> <span id="countHoras">0</span></p>
-    <script>
+        function contarHoras() {
+            let input = document.getElementById("inputHoras1").value;
+            let horarios = input.match(/\b\d{1,2}:\d{2}\b/g);
+            let count = 0;
+
+            if (horarios) {
+                horarios.forEach(horario => {
+                    let [h, m] = horario.split(":").map(Number);
+                    if (h > 8 || (h === 8 && m > 0)) {
+                        count++;
+                    }
+                });
+            }
+
+            document.getElementById("countHoras1").innerText = count;
+        }
+
+        // Cálculo de intervalos contabilizados
+        document.getElementById("inputHoras2").addEventListener("input", contarIntervalos);
+
+        function contarIntervalos() {
+            let input = document.getElementById("inputHoras2").value;
+            let horarios = input.match(/\b\d{1,2}:\d{2}\b/g);
+            let count = 0;
+
+            if (horarios) {
+                for (let i = 0; i < horarios.length; i += 2) {
+                    let [hSaida, mSaida] = horarios[i].split(":").map(Number);
+                    let [hRetorno, mRetorno] = (horarios[i + 1] || "00:00").split(":").map(Number);
+
+                    let horaSaidaDate = new Date(2025, 0, 1, hSaida, mSaida);
+                    let horaRetornoDate = new Date(2025, 0, 1, hRetorno, mRetorno);
+                    let horaReferencia = new Date(2025, 0, 1, 15, 30);
+
+                    let diff = (horaRetornoDate - horaSaidaDate) / 60000;
+
+                    if (horaSaidaDate >= horaReferencia && diff > 90) {
+                        count++;
+                    }
+                }
+            }
+
+            document.getElementById("countHoras2").innerText = count;
+        }
+
+        // Cálculo da média de valores
         document.getElementById("inputValores").addEventListener("input", calcularMedia);
-        document.getElementById("inputHoras").addEventListener("input", contarHoras);
 
         function calcularMedia() {
             let input = document.getElementById("inputValores").value;
-            let valores = input.match(/-?\d+(\.\d+)?/g); 
+            let valores = input.match(/-?\d+(\.\d+)?/g);
 
             if (valores) {
                 let numeros = valores.map(Number);
@@ -61,49 +173,7 @@
                 document.getElementById("mediaFinal").innerText = "0";
             }
         }
-
-        function contarHoras() {
-            let input = document.getElementById("inputHoras").value;
-            let horas = input.match(/\b\d{1,2}:\d{2}\b/g); 
-
-            if (horas) {
-                let count = horas.filter(hora => {
-                    let [h, m] = hora.split(":").map(Number);
-                    return h > 8 || (h === 8 && m > 0); // Conta se for maior que 08:00
-                }).length;
-
-                document.getElementById("countHoras").innerText = count;
-            } else {
-                document.getElementById("countHoras").innerText = "0";
-            }
-        }
     </script>
-    	<h2>Insira os valores</h2>
-    <textarea id="inputValores" rows="10" cols="50" placeholder="Cole aqui os valores separados por espaço, vírgula ou enter..."></textarea>
-    <br>
-    <p><strong>Média Calculada:</strong> <span id="mediaFinal">0</span></p>
-
-    <script>
-        document.getElementById("inputValores").addEventListener("input", calcularMedia);
-
-        function calcularMedia() {
-            let input = document.getElementById("inputValores").value;
-            
-            // Filtra apenas números separados por espaços, vírgulas ou quebras de linha
-            let valores = input.match(/-?\d+(\.\d+)?/g); 
-
-            if (valores) {
-                let numeros = valores.map(Number); // Converte para números
-                let media = numeros.reduce((a, b) => a + b, 0) / numeros.length;
-                document.getElementById("mediaFinal").innerText = media.toFixed(2);
-            } else {
-                document.getElementById("mediaFinal").innerText = "0";
-            }
-        }
-    </script>
-
 
 </body>
 </html>
-
-
