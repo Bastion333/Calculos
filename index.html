@@ -5,90 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cálculo de Intervalo e Métrica</title>
     <style type="text/css">
-body {
+        body {
             font-family: Arial, sans-serif;
             margin: 20px;
             padding: 0;
             background-color: #f4f4f4;
         }
-
-        /* Container para os dois blocos laterais */
-        .container {
-            display: flex;
-            justify-content: space-between; /* Mantém os blocos alinhados */
-            align-items: flex-start;
-            width: 100%;
-            gap: 20px;
+        .conteudo-abaixo {
+            text-align: center;
+            margin-bottom: 20px;
         }
-
-        /* Estilo dos blocos laterais */
-        .conteudo-esquerda, .conteudo-direita {
-            width: 48%; /* Deixa os blocos com tamanhos semelhantes */
+        .btn {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-selecionado {
+            background-color: #0056b3;
+        }
+        .conteudo {
+            display: none;
+            margin-top: 20px;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 8px;
             background-color: #fff;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }
-
-        /* Garante que o bloco de valores fique abaixo dos demais */
-        .conteudo-abaixo {
-            width: 100%;
-            margin-top: 20px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #e9ecef;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Ajuste dos inputs */
-        textarea {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            resize: vertical;
-        }
     </style>
-
 </head>
 <body>
-    <!-- Bloco de tempos de atendimento -->
     <div class="conteudo-abaixo">
-        <h2>Insira os tempos de atendimento (em minutos)</h2>
-        <textarea id="inputTempos" rows="5" placeholder="Cole os tempos de atendimento separados por espaço, vírgula ou enter..."></textarea>
+        <h2>Escolha uma operação</h2>
+        <button class="btn" onclick="selecionarOperacao(this, 'tme')">Calcular TME</button>
+        <button class="btn" onclick="selecionarOperacao(this, 'horas')">Contar Horários</button>
+        <button class="btn" onclick="selecionarOperacao(this, 'intervalos')">Contar Intervalos</button>
+        <button class="btn" onclick="selecionarOperacao(this, 'media')">Calcular Média</button>
+    </div>
+
+    <div id="tme" class="conteudo">
+        <h2>Calcular TME</h2>
+        <textarea id="inputTempos" rows="5" placeholder="Insira os tempos de atendimento separados por espaço, vírgula ou enter..."></textarea>
         <p><strong>TME Calculado:</strong> <span id="tmeFinal">0</span></p>
     </div>
 
-    <!-- Container principal para os dois blocos lado a lado -->
-    <div class="container">
-        <!-- Lado esquerdo -->
-        <div class="conteudo-esquerda">
-            <h2>Insira os horários para calcular a métrica</h2>
-            <textarea id="inputHoras1" rows="5" placeholder="Cole os horários no formato HH:MM"></textarea>
-            <p><strong>Quantidade de horários acima de 08:00:</strong> <span id="countHoras1">0</span></p>
-        </div>
-
-        <!-- Lado direito -->
-        <div class="conteudo-direita">
-            <h2>Insira os horários para calcular a métrica (Saída e Retorno)</h2>
-            <textarea id="inputHoras2" rows="5" placeholder="Cole os horários no formato HH:MM (Saída e Retorno separados por espaço)"></textarea>
-            <p><strong>Quantidade de intervalos contabilizados:</strong> <span id="countHoras2">0</span></p>
-        </div>
+    <div id="horas" class="conteudo">
+        <h2>Contar Horários</h2>
+        <textarea id="inputHoras1" rows="5" placeholder="Insira os horários no formato HH:MM"></textarea>
+        <p><strong>Quantidade de horários acima de 08:00:</strong> <span id="countHoras1">0</span></p>
     </div>
 
-    <!-- Bloco abaixo dos cálculos -->
-    <div class="conteudo-abaixo">
-        <h2>Insira os valores</h2>
-        <textarea id="inputValores" rows="5" placeholder="Cole aqui os valores separados por espaço, vírgula ou enter..."></textarea>
+    <div id="intervalos" class="conteudo">
+        <h2>Contar Intervalos</h2>
+        <textarea id="inputHoras2" rows="5" placeholder="Insira os horários (Saída e Retorno) separados por espaço"></textarea>
+        <p><strong>Quantidade de intervalos contabilizados:</strong> <span id="countHoras2">0</span></p>
+    </div>
+
+    <div id="media" class="conteudo">
+        <h2>Calcular Média</h2>
+        <textarea id="inputValores" rows="5" placeholder="Insira os valores separados por espaço, vírgula ou enter..."></textarea>
         <p><strong>Média Calculada:</strong> <span id="mediaFinal">0</span></p>
     </div>
 
     <script>
-                // Cálculo do TME (Tempo Médio de Atendimento)
+        function selecionarOperacao(botao, operacao) {
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('btn-selecionado'));
+            botao.classList.add('btn-selecionado');
+            
+            document.querySelectorAll('.conteudo').forEach(div => div.style.display = 'none');
+            document.getElementById(operacao).style.display = 'block';
+        }
+
+        // Cálculo do TME (Tempo Médio de Atendimento)
         document.getElementById("inputTempos").addEventListener("input", calcularTME);
 
         function calcularTME() {
@@ -174,6 +167,5 @@ body {
             }
         }
     </script>
-
 </body>
 </html>
