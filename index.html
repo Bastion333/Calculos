@@ -123,33 +123,31 @@
             document.getElementById("countHoras1").innerText = count;
         }
 
-        // Cálculo de intervalos contabilizados
-        document.getElementById("inputHoras2").addEventListener("input", contarIntervalos);
+function contarIntervalos() {
+    let input = document.getElementById("inputHoras2").value;
+    let horarios = input.match(/\b\d{1,2}:\d{2}\b/g);
+    let count = 0;
 
-        function contarIntervalos() {
-            let input = document.getElementById("inputHoras2").value;
-            let horarios = input.match(/\b\d{1,2}:\d{2}\b/g);
-            let count = 0;
+    if (horarios) {
+        for (let i = 0; i < horarios.length; i += 2) {
+            let [hSaida, mSaida] = horarios[i].split(":").map(Number);
+            let [hRetorno, mRetorno] = (horarios[i + 1] || "00:00").split(":").map(Number);
 
-            if (horarios) {
-                for (let i = 0; i < horarios.length; i += 2) {
-                    let [hSaida, mSaida] = horarios[i].split(":").map(Number);
-                    let [hRetorno, mRetorno] = (horarios[i + 1] || "00:00").split(":").map(Number);
+            // Converte a hora de saída e retorno para minutos desde 00:00
+            let minutosSaida = hSaida * 60 + mSaida;
+            let minutosRetorno = hRetorno * 60 + mRetorno;
 
-                    let horaSaidaDate = new Date(2025, 0, 1, hSaida, mSaida);
-                    let horaRetornoDate = new Date(2025, 0, 1, hRetorno, mRetorno);
-                    let horaReferencia = new Date(2025, 0, 1, 15, 30);
+            // Verifica se o horário de retorno é depois do horário de saída
+            if (minutosRetorno > minutosSaida) {
+                let diff = minutosRetorno - minutosSaida; // diferença em minutos
 
-                    let diff = (horaRetornoDate - horaSaidaDate) / 60000;
-
-                    if (horaSaidaDate >= horaReferencia && diff > 90) {
-                        count++;
-                    }
+                // Verifica se a diferença é maior ou igual a 90 minutos
+                if (diff >= 91) {
+                    count++;
                 }
             }
-
-            document.getElementById("countHoras2").innerText = count;
         }
+    }
 
         // Cálculo da média de valores
         document.getElementById("inputValores").addEventListener("input", calcularMedia);
