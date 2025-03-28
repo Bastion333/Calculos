@@ -123,6 +123,9 @@
             document.getElementById("countHoras1").innerText = count;
         }
 
+        // Cálculo de intervalos contabilizados
+        document.getElementById("inputHoras2").addEventListener("input", contarIntervalos);
+
 function contarIntervalos() {
     let input = document.getElementById("inputHoras2").value;
     let horarios = input.match(/\b\d{1,2}:\d{2}\b/g);
@@ -148,6 +151,9 @@ function contarIntervalos() {
             }
         }
     }
+
+    document.getElementById("countHoras2").innerText = count;
+}
 
         // Cálculo da média de valores
         document.getElementById("inputValores").addEventListener("input", calcularMedia);
