@@ -155,21 +155,22 @@ function contarIntervalos() {
     document.getElementById("countHoras2").innerText = count;
 }
 
-        // Cálculo da média de valores
-        document.getElementById("inputValores").addEventListener("input", calcularMedia);
+     // Cálculo da média de valores
+document.getElementById("inputValores").addEventListener("input", calcularMedia);
 
-        function calcularMedia() {
-            let input = document.getElementById("inputValores").value;
-            let valores = input.match(/-?\d+(\.\d+)?/g);
+function calcularMedia() {
+    let input = document.getElementById("inputValores").value;
+    
+    // Separando os números corretamente
+    let valores = input.split(/[\s,;]+/).map(v => v.replace(",", ".")).map(Number).filter(v => !isNaN(v));
 
-            if (valores) {
-                let numeros = valores.map(Number);
-                let media = numeros.reduce((a, b) => a + b, 0) / numeros.length;
-                document.getElementById("mediaFinal").innerText = media.toFixed(2);
-            } else {
-                document.getElementById("mediaFinal").innerText = "0";
-            }
-        }
+    if (valores.length > 0) {
+        let media = valores.reduce((a, b) => a + b, 0) / valores.length;
+        document.getElementById("mediaFinal").innerText = media.toFixed(2);
+    } else {
+        document.getElementById("mediaFinal").innerText = "0";
+    }
+}
     </script>
 </body>
 </html>
