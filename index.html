@@ -156,21 +156,27 @@ function contarIntervalos() {
 }
 
      // Cálculo da média de valores
+     // Cálculo da média de valores
 document.getElementById("inputValores").addEventListener("input", calcularMedia);
 
-function calcularMedia() {
-    let input = document.getElementById("inputValores").value;
-    
-    // Separando os números corretamente
-    let valores = input.split(/[\s,;]+/).map(v => v.replace(",", ".")).map(Number).filter(v => !isNaN(v));
+  function calcularMedia() {
+            let input = document.getElementById("inputValores").value;
+            
+            // Separando os números por quebra de linha
+            let valores = input
+                .split(/\n+/) // Quebra de linha
+                .map(v => v.trim().replace(",", ".")) // Remove espaços extras e troca vírgula por ponto
+                .map(v => parseFloat(v)) // Converte para número corretamente
+                .filter(v => !isNaN(v)); // Remove valores inválidos
 
-    if (valores.length > 0) {
-        let media = valores.reduce((a, b) => a + b, 0) / valores.length;
-        document.getElementById("mediaFinal").innerText = media.toFixed(2);
-    } else {
-        document.getElementById("mediaFinal").innerText = "0";
-    }
-}
+            if (valores.length > 0) {
+                let soma = valores.reduce((a, b) => a + b, 0);
+                let media = soma / valores.length;
+                document.getElementById("mediaFinal").innerText = media.toFixed(2);
+            } else {
+                document.getElementById("mediaFinal").innerText = "0";
+            }
+        }
     </script>
 </body>
 </html>
