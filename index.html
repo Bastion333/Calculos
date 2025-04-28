@@ -1,182 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cálculo de Intervalo e Métrica</title>
-    <style type="text/css">
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .conteudo-abaixo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .btn {
-            padding: 10px 20px;
-            margin: 10px 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-selecionado {
-            background-color: #0056b3;
-        }
-        .conteudo {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferramentas de Cálculo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+    }
+    .conteudo-abaixo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .btn {
+        padding: 10px 20px;
+        margin: 10px 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+    }
+    .btn-selecionado {
+        background-color: #0056b3;
+    }
+    .conteudo {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .campo {
+        flex: 1;
+        min-width: 250px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    textarea {
+        width: 100%;
+        height: 120px;
+        margin-bottom: 10px;
+        resize: none;
+    }
+    .resultado {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
 </head>
 <body>
-    <div class="conteudo-abaixo">
-        <h2>Escolha uma operação</h2>
-        <button class="btn" onclick="selecionarOperacao(this, 'tme')">Calcular TME</button>
-        <button class="btn" onclick="selecionarOperacao(this, 'horas')">Contar Horários</button>
-        <button class="btn" onclick="selecionarOperacao(this, 'intervalos')">Contar Intervalos</button>
-        <button class="btn" onclick="selecionarOperacao(this, 'media')">Calcular Média</button>
+
+<div class="conteudo-abaixo">
+    <h2>Escolha uma operação</h2>
+    <button class="btn" onclick="selecionarOperacao(this, 'tme')">Calcular TME</button>
+    <button class="btn" onclick="selecionarOperacao(this, 'horas')">Contar Horários</button>
+    <button class="btn" onclick="selecionarOperacao(this, 'intervalos')">Contar Intervalos</button>
+    <button class="btn" onclick="selecionarOperacao(this, 'media')">Calcular Média</button>
+    <button class="btn" onclick="selecionarOperacao(this, 'ponderada')">Média Ponderada</button>
+</div>
+
+<div id="tme" class="conteudo">
+    <h2>Calcular TME</h2>
+    <textarea id="inputTempos" rows="5" placeholder="Insira os tempos separados..."></textarea>
+    <p><strong>TME Calculado:</strong> <span id="tmeFinal">0</span></p>
+</div>
+
+<div id="horas" class="conteudo">
+    <h2>Contar Horários</h2>
+    <textarea id="inputHoras1" rows="5" placeholder="Insira os horários (HH:MM)..."></textarea>
+    <p><strong>Quantidade acima de 08:00:</strong> <span id="countHoras1">0</span></p>
+</div>
+
+<div id="intervalos" class="conteudo">
+    <h2>Contar Intervalos</h2>
+    <textarea id="inputHoras2" rows="5" placeholder="Insira Saída e Retorno separados..."></textarea>
+    <p><strong>Intervalos Contabilizados:</strong> <span id="countHoras2">0</span></p>
+</div>
+
+<div id="media" class="conteudo">
+    <h2>Calcular Média</h2>
+    <textarea id="inputValores" rows="5" placeholder="Insira valores separados..."></textarea>
+    <p><strong>Média Calculada:</strong> <span id="mediaFinal">0</span></p>
+</div>
+
+<div id="ponderada" class="conteudo">
+    <h2>Calcular Média Ponderada</h2>
+    <div class="container">
+        <div class="campo">
+            <h3>Grupo 1</h3>
+            <textarea id="campo1" placeholder="Notas do Grupo 1..."></textarea>
+            <div class="resultado" id="resultado1">Quantidade: 0 | Média: 0</div>
+        </div>
+
+        <div class="campo">
+            <h3>Grupo 2</h3>
+            <textarea id="campo2" placeholder="Notas do Grupo 2..."></textarea>
+            <div class="resultado" id="resultado2">Quantidade: 0 | Média: 0</div>
+        </div>
+
+        <div class="campo">
+            <h3>Resultado Final</h3>
+            <div class="resultado" id="resultadoFinal">Média Ponderada: 0</div>
+        </div>
     </div>
+</div>
 
-    <div id="tme" class="conteudo">
-        <h2>Calcular TME</h2>
-        <textarea id="inputTempos" rows="5" placeholder="Insira os tempos de atendimento separados por espaço, vírgula ou enter..."></textarea>
-        <p><strong>TME Calculado:</strong> <span id="tmeFinal">0</span></p>
-    </div>
+<script>
+function selecionarOperacao(botao, operacao) {
+    document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('btn-selecionado'));
+    botao.classList.add('btn-selecionado');
 
-    <div id="horas" class="conteudo">
-        <h2>Contar Horários</h2>
-        <textarea id="inputHoras1" rows="5" placeholder="Insira os horários no formato HH:MM"></textarea>
-        <p><strong>Quantidade de horários acima de 08:00:</strong> <span id="countHoras1">0</span></p>
-    </div>
+    document.querySelectorAll('.conteudo').forEach(div => div.style.display = 'none');
+    document.getElementById(operacao).style.display = 'block';
+}
 
-    <div id="intervalos" class="conteudo">
-        <h2>Contar Intervalos</h2>
-        <textarea id="inputHoras2" rows="5" placeholder="Insira os horários (Saída e Retorno) separados por espaço"></textarea>
-        <p><strong>Quantidade de intervalos contabilizados:</strong> <span id="countHoras2">0</span></p>
-    </div>
+// Calcular TME
+document.getElementById("inputTempos").addEventListener("input", calcularTME);
 
-    <div id="media" class="conteudo">
-        <h2>Calcular Média</h2>
-        <textarea id="inputValores" rows="5" placeholder="Insira os valores separados por espaço, vírgula ou enter..."></textarea>
-        <p><strong>Média Calculada:</strong> <span id="mediaFinal">0</span></p>
-    </div>
+function calcularTME() {
+    let input = document.getElementById("inputTempos").value;
+    let tempos = input.match(/-?\d+(\.\d+)?/g);
+    if (tempos) {
+        let temposNumericos = tempos.map(Number);
+        let soma = temposNumericos.reduce((a, b) => a + b, 0);
+        let media = soma / temposNumericos.length;
+        let minutos = Math.floor(media);
+        let segundos = Math.round((media - minutos) * 60);
+        document.getElementById("tmeFinal").innerText = `${minutos} min e ${segundos} s`;
+    } else {
+        document.getElementById("tmeFinal").innerText = "0";
+    }
+}
 
-    <script>
-        function selecionarOperacao(botao, operacao) {
-            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('btn-selecionado'));
-            botao.classList.add('btn-selecionado');
-            
-            document.querySelectorAll('.conteudo').forEach(div => div.style.display = 'none');
-            document.getElementById(operacao).style.display = 'block';
-        }
+// Contar Horários
+document.getElementById("inputHoras1").addEventListener("input", contarHoras);
 
-        // Cálculo do TME (Tempo Médio de Atendimento)
-        document.getElementById("inputTempos").addEventListener("input", calcularTME);
-
-        function calcularTME() {
-            let input = document.getElementById("inputTempos").value;
-            let tempos = input.match(/-?\d+(\.\d+)?/g); 
-
-            if (tempos) {
-                let temposNumericos = tempos.map(Number);
-                let somaTempos = temposNumericos.reduce((a, b) => a + b, 0);
-                let numeroDeAtendimentos = temposNumericos.length;
-
-                let tme = somaTempos / numeroDeAtendimentos;
-                let minutos = Math.floor(tme);
-                let segundos = Math.round((tme - minutos) * 60);
-                
-                document.getElementById("tmeFinal").innerText = `${minutos} minutos e ${segundos} segundos`;
-            } else {
-                document.getElementById("tmeFinal").innerText = "0";
+function contarHoras() {
+    let input = document.getElementById("inputHoras1").value;
+    let horarios = input.match(/\b\d{1,2}:\d{2}\b/g);
+    let count = 0;
+    if (horarios) {
+        horarios.forEach(horario => {
+            let [h, m] = horario.split(":").map(Number);
+            if (h > 8 || (h === 8 && m > 0)) {
+                count++;
             }
-        }
+        });
+    }
+    document.getElementById("countHoras1").innerText = count;
+}
 
-        // Cálculo da quantidade de horários acima de 08:00
-        document.getElementById("inputHoras1").addEventListener("input", contarHoras);
-
-        function contarHoras() {
-            let input = document.getElementById("inputHoras1").value;
-            let horarios = input.match(/\b\d{1,2}:\d{2}\b/g);
-            let count = 0;
-
-            if (horarios) {
-                horarios.forEach(horario => {
-                    let [h, m] = horario.split(":").map(Number);
-                    if (h > 8 || (h === 8 && m > 0)) {
-                        count++;
-                    }
-                });
-            }
-
-            document.getElementById("countHoras1").innerText = count;
-        }
-
-        // Cálculo de intervalos contabilizados
-        document.getElementById("inputHoras2").addEventListener("input", contarIntervalos);
+// Contar Intervalos
+document.getElementById("inputHoras2").addEventListener("input", contarIntervalos);
 
 function contarIntervalos() {
     let input = document.getElementById("inputHoras2").value;
     let horarios = input.match(/\b\d{1,2}:\d{2}\b/g);
     let count = 0;
-
     if (horarios) {
         for (let i = 0; i < horarios.length; i += 2) {
             let [hSaida, mSaida] = horarios[i].split(":").map(Number);
             let [hRetorno, mRetorno] = (horarios[i + 1] || "00:00").split(":").map(Number);
-
-            // Converte a hora de saída e retorno para minutos desde 00:00
             let minutosSaida = hSaida * 60 + mSaida;
             let minutosRetorno = hRetorno * 60 + mRetorno;
-
-            // Verifica se o horário de retorno é depois do horário de saída
-            if (minutosRetorno > minutosSaida) {
-                let diff = minutosRetorno - minutosSaida; // diferença em minutos
-
-                // Verifica se a diferença é maior ou igual a 90 minutos
-                if (diff >= 91) {
-                    count++;
-                }
+            if (minutosRetorno > minutosSaida && (minutosRetorno - minutosSaida) >= 91) {
+                count++;
             }
         }
     }
-
     document.getElementById("countHoras2").innerText = count;
 }
 
-     // Cálculo da média de valores
-     // Cálculo da média de valores
+// Calcular Média Simples
 document.getElementById("inputValores").addEventListener("input", calcularMedia);
 
-  function calcularMedia() {
-            let input = document.getElementById("inputValores").value;
-            
-            // Separando os números por quebra de linha
-            let valores = input
-                .split(/\n+/) // Quebra de linha
-                .map(v => v.trim().replace(",", ".")) // Remove espaços extras e troca vírgula por ponto
-                .map(v => parseFloat(v)) // Converte para número corretamente
-                .filter(v => !isNaN(v)); // Remove valores inválidos
+function calcularMedia() {
+    let input = document.getElementById("inputValores").value;
+    let valores = input
+        .split(/\s+|,|\n/)
+        .map(v => parseFloat(v.replace(",", ".")))
+        .filter(v => !isNaN(v));
+    if (valores.length > 0) {
+        let soma = valores.reduce((a, b) => a + b, 0);
+        let media = soma / valores.length;
+        document.getElementById("mediaFinal").innerText = media.toFixed(2);
+    } else {
+        document.getElementById("mediaFinal").innerText = "0";
+    }
+}
 
-            if (valores.length > 0) {
-                let soma = valores.reduce((a, b) => a + b, 0);
-                let media = soma / valores.length;
-                document.getElementById("mediaFinal").innerText = media.toFixed(2);
-            } else {
-                document.getElementById("mediaFinal").innerText = "0";
-            }
-        }
-    </script>
+// Calcular Média Ponderada
+document.getElementById("campo1").addEventListener("input", atualizarResultados);
+document.getElementById("campo2").addEventListener("input", atualizarResultados);
+
+function processarCampo(idCampo, idResultado) {
+    let texto = document.getElementById(idCampo).value;
+    let numeros = texto
+        .split(/\s+|,|\n/)
+        .map(v => parseFloat(v.replace(",", ".")))
+        .filter(v => !isNaN(v) && v >= 1 && v <= 5); // <-- Aceita só notas entre 1 e 5
+    let quantidade = numeros.length;
+    let media = quantidade > 0 ? numeros.reduce((a, b) => a + b, 0) / quantidade : 0;
+    document.getElementById(idResultado).innerText = `Quantidade: ${quantidade} | Média: ${media.toFixed(2)}`;
+    return { quantidade, media };
+}
+
+
+function atualizarResultados() {
+    let grupo1 = processarCampo('campo1', 'resultado1');
+    let grupo2 = processarCampo('campo2', 'resultado2');
+    let totalPesos = grupo1.quantidade + grupo2.quantidade;
+    let mediaPonderada = totalPesos > 0
+        ? ((grupo1.media * grupo1.quantidade) + (grupo2.media * grupo2.quantidade)) / totalPesos
+        : 0;
+    document.getElementById('resultadoFinal').innerText = `Média Ponderada: ${mediaPonderada.toFixed(2)}`;
+}
+</script>
+
 </body>
 </html>
