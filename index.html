@@ -131,17 +131,34 @@ function selecionarOperacao(botao, operacao) {
 document.getElementById("inputTempos").addEventListener("input", calcularTME);
 
 function calcularTME() {
-    let input = document.getElementById("inputTempos").value;
-    let tempos = input.match(/-?\d+(\.\d+)?/g);
-    if (tempos) {
-        let temposNumericos = tempos.map(Number);
-        let soma = temposNumericos.reduce((a, b) => a + b, 0);
-        let media = soma / temposNumericos.length;
-        let minutos = Math.floor(media);
-        let segundos = Math.round((media - minutos) * 60);
+    let input = document.getElementById("inputTempos").value.trim();
+    let linhas = input.split("\n");
+
+    let totalSegundos = 0;
+    let contador = 0;
+
+    for (let linha of linhas) {
+        if (linha.trim() === "") continue; // Ignora linhas vazias
+        let partes = linha.trim().split(":");
+
+        if (partes.length === 3) {
+            let horas = parseInt(partes[0], 10);
+            let minutos = parseInt(partes[1], 10);
+            let segundos = parseInt(partes[2], 10);
+
+            let tempoEmSegundos = horas * 3600 + minutos * 60 + segundos;
+            totalSegundos += tempoEmSegundos;
+            contador++;
+        }
+    }
+
+    if (contador > 0) {
+        let mediaSegundos = totalSegundos / contador;
+        let minutos = Math.floor(mediaSegundos / 60);
+        let segundos = Math.round(mediaSegundos % 60);
         document.getElementById("tmeFinal").innerText = `${minutos} min e ${segundos} s`;
     } else {
-        document.getElementById("tmeFinal").innerText = "0";
+        document.getElementById("tmeFinal").innerText = "0 min e 0 s";
     }
 }
 
